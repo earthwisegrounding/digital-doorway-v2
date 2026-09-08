@@ -10,35 +10,30 @@
   var hero = document.querySelector(".hero");
 
   if (hero && finePointer.matches && !reduced.matches) {
-    var tx = 0, ty = 0, cx = 0, cy = 0, primed = false, ticking = false;
+    // The opening stands on the floor line, so only x is tracked —
+    // it slides along the wall rather than floating around the page.
+    var tx = 0, cx = 0, primed = false, ticking = false;
 
     var place = function () {
       ticking = false;
-      // ease toward the pointer so the light has weight
-      cx += (tx - cx) * 0.14;
-      cy += (ty - cy) * 0.14;
+      cx += (tx - cx) * 0.12;               // ease, so the door has weight
       hero.style.setProperty("--ax", cx.toFixed(1) + "px");
-      hero.style.setProperty("--ay", cy.toFixed(1) + "px");
-      if (Math.abs(tx - cx) > 0.4 || Math.abs(ty - cy) > 0.4) {
+      if (Math.abs(tx - cx) > 0.4) {
         ticking = true;
         requestAnimationFrame(place);
       }
     };
 
     var onMove = function (e) {
-      var r = hero.getBoundingClientRect();
-      tx = e.clientX - r.left;
-      ty = e.clientY - r.top;
-      if (!primed) { cx = tx; cy = ty; primed = true; }
+      tx = e.clientX - hero.getBoundingClientRect().left;
+      if (!primed) { cx = tx; primed = true; }
       if (!ticking) { ticking = true; requestAnimationFrame(place); }
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
 
-    // the door closes when the pointer leaves the page
     document.addEventListener("pointerleave", function () {
       hero.style.removeProperty("--ax");
-      hero.style.removeProperty("--ay");
       primed = false;
     });
 

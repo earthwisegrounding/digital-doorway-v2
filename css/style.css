@@ -28,9 +28,9 @@
   --maxw: 76rem;
   --sect-y: clamp(6rem, 13vw, 12rem);
 
-  --ap: clamp(360px, 48vw, 760px);   /* aperture diameter */
-  --ax: 62%;
-  --ay: 46%;
+  /* the opening: a door-shaped aperture standing on the floor line */
+  --pw: clamp(290px, 31vw, 500px);
+  --ax: 70%;
 
   --ease: cubic-bezier(.22, .61, .36, 1);
 }
@@ -241,13 +241,17 @@ a { color: inherit; text-decoration: none; }
   position: absolute; inset: 0; z-index: 2;
   overflow: hidden;
   pointer-events: none;
-  background-color: var(--interior);
   color: var(--cream);
-  -webkit-mask-image: radial-gradient(closest-side, #000 0 54%, rgba(0,0,0,.9) 70%, transparent 99%);
-          mask-image: radial-gradient(closest-side, #000 0 54%, rgba(0,0,0,.9) 70%, transparent 99%);
+  background-color: var(--interior);
+  background-image:
+    radial-gradient(90% 42% at 50% 106%, rgba(232,163,61,.15), rgba(232,163,61,0) 72%);
+
+  --mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' preserveAspectRatio='none'%3E%3Cfilter id='b' x='-25%25' y='-25%25' width='150%25' height='150%25'%3E%3CfeGaussianBlur stdDeviation='.3'/%3E%3C/filter%3E%3Cpath d='M3 200V27C3 13.8 24 4 50 4s47 9.8 47 23v173z' fill='%23000' filter='url(%23b)'/%3E%3C/svg%3E");
+  -webkit-mask-image: var(--mask); mask-image: var(--mask);
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-  -webkit-mask-size: var(--ap) var(--ap); mask-size: var(--ap) var(--ap);
-  -webkit-mask-position: var(--ax) var(--ay); mask-position: var(--ax) var(--ay);
+  -webkit-mask-size: var(--pw) 86%; mask-size: var(--pw) 86%;
+  -webkit-mask-position: calc(var(--ax) - var(--pw) / 2) 100%;
+          mask-position: calc(var(--ax) - var(--pw) / 2) 100%;
   will-change: mask-position;
 }
 .hero__lit .eyebrow { color: var(--cream-mute); }
@@ -257,19 +261,11 @@ a { color: inherit; text-decoration: none; }
 .hero__lit .btn--ghost { border-color: rgba(240,232,217,.22); color: var(--cream-mute); }
 
 /* architectural door lines, sitting inside the lit layer */
-.doorway {
-  position: absolute; right: 4%; bottom: 0;
-  width: min(46vw, 34rem); height: 86%;
-  opacity: .5;
+/* the threshold strip: lit floor at the foot of the opening */
+.hero__lit::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(232,163,61,.55) 30%, rgba(232,163,61,.55) 70%, transparent);
 }
-.doorway__lines {
-  fill: none; stroke: var(--amber-lit); stroke-width: 1; vector-effect: non-scaling-stroke;
-}
-.doorway__lines path:nth-child(1) { opacity: .85; }
-.doorway__lines path:nth-child(2) { opacity: .5; }
-.doorway__lines path:nth-child(3) { opacity: .28; }
-.doorway__lines path:nth-child(4) { opacity: .4; }
-.doorway__lines path:nth-child(5) { opacity: .2; }
 
 .hero__copy { max-width: 58rem; display: grid; gap: clamp(1.1rem, 2.2vw, 1.6rem); }
 .hero__copy .eyebrow { margin-bottom: -.2rem; }
@@ -314,15 +310,12 @@ a { color: inherit; text-decoration: none; }
   width: 5px; height: 5px; border: 1px solid var(--amber); border-radius: 50%;
 }
 
-/* no pointer → the light drifts on its own */
+/* no pointer → the door swings slowly across on its own */
 @media (hover: none) {
-  .hero__lit {
-    animation: drift 17s ease-in-out infinite alternate;
-  }
+  .hero__lit { animation: drift 22s ease-in-out infinite alternate; }
   @keyframes drift {
-    0%   { -webkit-mask-position: 22% 34%; mask-position: 22% 34%; }
-    50%  { -webkit-mask-position: 78% 52%; mask-position: 78% 52%; }
-    100% { -webkit-mask-position: 34% 68%; mask-position: 34% 68%; }
+    0%   { -webkit-mask-position: -6% 100%; mask-position: -6% 100%; }
+    100% { -webkit-mask-position: 106% 100%; mask-position: 106% 100%; }
   }
 }
 
@@ -720,12 +713,11 @@ a { color: inherit; text-decoration: none; }
 
 /* ---------- 17. Fine tuning at phone size ---------- */
 @media (max-width: 560px) {
-  :root { --ap: 92vw; }
+  :root { --pw: 62vw; }
   .display { font-size: clamp(2.6rem, 12.5vw, 4rem); }
   .hero { padding-top: 3.9rem; }
   .hero__foot { gap: .35rem 1.4rem; font-size: .68rem; padding-block: .95rem; }
   .hero__hint { display: none; }
-  .doorway { right: -6%; width: 78vw; opacity: .38; }
   .serp { padding-inline: 1rem; }
   .serp__item--you::before { left: -.6rem; }
   .ledger__item { font-size: .95rem; }
