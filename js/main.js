@@ -62,11 +62,11 @@
       });
     }, { rootMargin: "0px 0px -12% 0px", threshold: 0.15 });
 
-    document.querySelectorAll(".reveal, .marker, .schedule li").forEach(function (el) {
+    document.querySelectorAll(".reveal, .marker, .schedule li, .threshold").forEach(function (el) {
       io.observe(el);
     });
   } else {
-    document.querySelectorAll(".reveal, .marker, .schedule li").forEach(function (el) {
+    document.querySelectorAll(".reveal, .marker, .schedule li, .threshold").forEach(function (el) {
       el.classList.add("in");
     });
   }
