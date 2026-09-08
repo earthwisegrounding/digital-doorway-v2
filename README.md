@@ -13,12 +13,21 @@ oxidised-amber accent, and a display serif (Instrument Serif) set against a
 clean grotesque (Instrument Sans) with a mono face for the small structural
 labels.
 
-One signature interaction carries the "doorway" idea. The hero holds two
-identical typographic layers — ink on paper, and cream on a lit interior. A
-soft circular aperture of warm light follows the pointer, revealing the lit
-layer beneath. Nothing moves, nothing swaps: the light simply opens, the way
-a door left ajar throws a wedge across a floor. On touch devices the light
-drifts slowly on its own; under `prefers-reduced-motion` it holds still.
+The doorway is a shape, not an effect. One arched silhouette is used at four
+scales: the hero opening, the three portfolio plates, the guarantee that
+closes the FAQ, and the lit doorway the page ends on.
+
+The hero holds two identical typographic layers — ink on paper, and cream on
+a dark interior. The arch is a mask over the second, standing on the floor
+line and sliding horizontally with the pointer, so words cross the threshold
+and light up as it passes. Nothing swaps and nothing reflows; only the light
+moves.
+
+A phone has no pointer and no room to stand a door beside a headline, so
+below 760px the opening is drawn rather than cut — three receding frames set
+into the hero's negative space, behind the type — and the moment of crossing
+moves to the top edge of the dark Work section, which opens as it arrives.
+Under `prefers-reduced-motion` everything holds still in its final state.
 
 ## Structure
 

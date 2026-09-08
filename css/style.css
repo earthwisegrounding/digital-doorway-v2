@@ -10,7 +10,8 @@
   --paper-sunk: #e7e0d4;
   --ink:        #17130e;
   --ink-soft:   #3d362c;
-  --ink-mute:   #6d6558;
+  --ink-mute:   #635b4e;
+  --amber-deep: #8a4f16;
   --rule:       rgba(23, 19, 14, .16);
   --rule-soft:  rgba(23, 19, 14, .09);
 
@@ -30,8 +31,11 @@
 
   /* the opening: a door-shaped aperture standing on the floor line */
   --door: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' preserveAspectRatio='none'%3E%3Cfilter id='b' x='-25%25' y='-25%25' width='150%25' height='150%25'%3E%3CfeGaussianBlur stdDeviation='.3'/%3E%3C/filter%3E%3Cpath d='M3 200V27C3 13.8 24 4 50 4s47 9.8 47 23v173z' fill='%23000' filter='url(%23b)'/%3E%3C/svg%3E");
+  /* same silhouette, arch drawn taller for the portrait plates */
+  --door-tall: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' preserveAspectRatio='none'%3E%3Cpath d='M2 200V48C2 22.5 23.5 2 50 2s48 20.5 48 46v152z' fill='%23000'/%3E%3C/svg%3E");
+  --door-soft: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200' preserveAspectRatio='none'%3E%3Cfilter id='b' x='-25%25' y='-25%25' width='150%25' height='150%25'%3E%3CfeGaussianBlur stdDeviation='.28'/%3E%3C/filter%3E%3Cpath d='M2 200V48C2 22.5 23.5 2 50 2s48 20.5 48 46v152z' fill='%23000' filter='url(%23b)'/%3E%3C/svg%3E");
   --pw: clamp(290px, 31vw, 500px);
-  --ax: 70%;
+  --ax: 84%;
 
   --ease: cubic-bezier(.22, .61, .36, 1);
 }
@@ -187,7 +191,7 @@ a { color: inherit; text-decoration: none; }
 }
 .masthead.is-stuck { border-bottom-color: var(--rule-soft); padding-block: .7rem; }
 
-.wordmark { display: flex; align-items: center; gap: .6rem; margin-right: auto; }
+.wordmark { display: flex; align-items: center; gap: .6rem; margin-right: auto; min-height: 44px; }
 .wordmark__mark {
   width: 1.35rem; height: 1.35rem; flex: none;
   fill: none; stroke: var(--ink); stroke-width: 1.5;
@@ -234,7 +238,7 @@ a { color: inherit; text-decoration: none; }
   .masthead__tel { min-height: 44px; padding-inline: .4rem; }
   .masthead__tel span { display: none; }
   .masthead__tel svg { width: 1.15rem; height: 1.15rem; }
-  .masthead__cta { padding: .6rem .9rem; font-size: .8rem; }
+  .masthead__cta { padding: .8rem .95rem; font-size: .8rem; min-height: 44px; display: flex; align-items: center; }
   .wordmark__text { font-size: .72rem; letter-spacing: .08em; }
 }
 
@@ -252,7 +256,7 @@ a { color: inherit; text-decoration: none; }
   padding: clamp(3rem, 7vw, 5rem) var(--gut);
 }
 
-.hero__inner { position: relative; z-index: 1; flex: 1; }
+.hero__inner { position: relative; z-index: 1; flex: 1; overflow: hidden; }
 
 /* the lit interior, revealed only through the aperture.
    Sits at inset:0 inside .hero__inner so its padding box — and therefore
@@ -264,14 +268,19 @@ a { color: inherit; text-decoration: none; }
   color: var(--cream);
   background-color: var(--interior);
   background-image:
-    radial-gradient(58% 34% at var(--ax) 104%, rgba(232,163,61,.32), rgba(232,163,61,0) 74%);
+    radial-gradient(46% 22% at var(--ax) 103%, rgba(232,163,61,.3), rgba(232,163,61,0) 78%);
 
-  -webkit-mask-image: var(--door); mask-image: var(--door);
+  -webkit-mask-image: var(--door-soft); mask-image: var(--door-soft);
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
   -webkit-mask-size: var(--pw) 86%; mask-size: var(--pw) 86%;
   -webkit-mask-position: calc(var(--ax) - var(--pw) / 2) 100%;
           mask-position: calc(var(--ax) - var(--pw) / 2) 100%;
   will-change: mask-position;
+  animation: doorArrives 1.5s var(--ease) .35s backwards;
+}
+/* the door swings in once, which is how you learn it can be moved */
+@keyframes doorArrives {
+  from { -webkit-mask-position: calc(112% - var(--pw) / 2) 100%; mask-position: calc(112% - var(--pw) / 2) 100%; }
 }
 .hero__lit .eyebrow { color: var(--cream-mute); }
 .hero__lit .lede { color: #cdc2ad; }
@@ -323,11 +332,14 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: .06em; text-transform: uppercase;
   color: var(--ink-mute);
 }
-.hero__foot a { border-bottom: 1px solid var(--rule); padding-bottom: 1px; transition: color .3s, border-color .3s; }
-.hero__foot a:hover { color: var(--ink); border-bottom-color: var(--amber); }
-.hero__foot span, .hero__foot a { position: relative; padding-left: 1rem; }
+.hero__foot span, .hero__foot a {
+  position: relative; padding-left: 1rem;
+  display: inline-flex; align-items: center; min-height: 1.9em;
+}
+.hero__foot a { transition: color .3s; }
+.hero__foot a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
 .hero__foot span::before, .hero__foot a::before {
-  content: ""; position: absolute; left: 0; top: .45em;
+  content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
   width: 5px; height: 5px; border: 1px solid var(--amber); border-radius: 50%;
 }
 
@@ -337,6 +349,24 @@ a { color: inherit; text-decoration: none; }
    there is space to draw it properly. */
 @media (max-width: 760px) {
   .hero__lit { display: none; }
+}
+
+/* On a phone the opening is drawn, not cut: three receding frames set into
+   the hero's negative space, behind the type rather than across it. */
+.hero__arch { display: none; }
+@media (max-width: 760px) {
+  .hero__arch {
+    display: block;
+    position: absolute; z-index: 0;
+    right: -14%; bottom: -1px;
+    width: 96%; height: 74%;
+    fill: none; stroke: var(--ink); stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .hero__arch path:nth-child(1) { opacity: .3; }
+  .hero__arch path:nth-child(2) { opacity: .18; }
+  .hero__arch path:nth-child(3) { opacity: .1; }
+  .hero__copy { position: relative; z-index: 1; }
 }
 
 /* ---------- 7. Section shell ---------- */
@@ -387,8 +417,8 @@ a { color: inherit; text-decoration: none; }
 }
 .serp__item--you .serp__title { color: var(--ink-soft); }
 .serp__flag {
-  font: 500 .62rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
-  color: var(--amber); border: 1px solid rgba(184,114,42,.4);
+  font: 500 .66rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase;
+  color: var(--amber-deep); border: 1px solid rgba(138,79,22,.45);
   padding: .2em .4em; margin-left: .5rem; border-radius: 2px;
 }
 .serp figcaption {
@@ -475,9 +505,9 @@ a { color: inherit; text-decoration: none; }
    open as the section arrives */
 .threshold {
   position: absolute; left: 50%; top: 1px; z-index: 2;
-  width: min(340px, 46vw); height: clamp(58px, 7vw, 104px);
+  width: min(400px, 56vw); height: clamp(120px, 12vw, 170px);
   background: var(--interior);
-  -webkit-mask-image: var(--door); mask-image: var(--door);
+  -webkit-mask-image: var(--door-tall); mask-image: var(--door-tall);
   -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
   transform: translate(-50%, -100%) scaleY(.08);
@@ -497,28 +527,34 @@ a { color: inherit; text-decoration: none; }
 }
 
 .plates {
-  display: grid; gap: clamp(2rem, 3.5vw, 2.6rem);
+  display: grid; gap: clamp(2rem, 3.5vw, 3rem);
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: clamp(3rem, 6vw, 4.5rem);
+  align-items: end;
 }
-@media (max-width: 940px) { .plates { grid-template-columns: 1fr; max-width: 30rem; } }
+@media (max-width: 940px) { .plates { grid-template-columns: 1fr; max-width: 24rem; } }
 
+/* The plates are cut to the same silhouette as the hero opening: three
+   doorways standing in the dark room, rather than three rectangles. */
 .plate__art {
-  aspect-ratio: 4 / 2.95;
-  border: 1px solid rgba(240,232,217,.14);
+  aspect-ratio: 3 / 3.7;
   overflow: hidden; position: relative;
-  transition: transform .55s var(--ease), border-color .55s;
+  -webkit-mask-image: var(--door-tall); mask-image: var(--door-tall);
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  transition: transform .55s var(--ease);
 }
-.plate:hover .plate__art { transform: translateY(-5px); border-color: rgba(232,163,61,.4); }
+.plate:hover .plate__art { transform: translateY(-6px); }
 .plate__art::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(160deg, rgba(255,255,255,.1), transparent 55%);
+  background: linear-gradient(180deg, rgba(255,255,255,.09), transparent 32%);
   pointer-events: none;
 }
 
 /* mini site vignettes — built, not stock */
 .mini {
-  height: 100%; padding: clamp(.9rem, 1.6vw, 1.3rem);
+  height: 100%;
+  padding: 32% clamp(1.3rem, 2.2vw, 1.7rem) clamp(1.2rem, 2vw, 1.7rem);
   display: flex; flex-direction: column;
 }
 .mini__bar {
@@ -557,10 +593,7 @@ a { color: inherit; text-decoration: none; }
   padding: .5rem .8rem; border-radius: 999px;
 }
 
-.plate__art--plumb {
-  background: #123441; color: #e6f0f0;
-  box-shadow: inset 0 0 0 1px rgba(240,232,217,.22);
-}
+.plate__art--plumb { background: #17414f; color: #e6f0f0; }
 .plate__art--plumb .mini__btn { background: #f2b33d; color: #10222a; }
 .plate__art--bake { background: #f2e5cf; color: #43301c; }
 .plate__art--bake .mini__btn { background: #43301c; color: #f2e5cf; }
@@ -569,10 +602,10 @@ a { color: inherit; text-decoration: none; }
 
 .plate__meta { padding-top: 1.15rem; }
 .plate__meta h3 {
-  font: 400 1.22rem/1.15 var(--display); letter-spacing: -.01em;
+  font: 400 1.45rem/1.12 var(--display); letter-spacing: -.012em;
 }
 .plate__where {
-  font: 400 .68rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase;
+  font: 400 .73rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase;
   color: var(--cream-mute); margin-top: .4rem;
 }
 .plate__result {
@@ -586,7 +619,8 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ---------- 11. 04 — the week ---------- */
-.process .h2 { margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.process { padding-block: calc(var(--sect-y) * .6); }
+.process .h2 { margin-bottom: clamp(2rem, 4vw, 3rem); }
 .schedule {
   display: grid; gap: 0;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -618,7 +652,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--amber); margin-bottom: 1.1rem;
 }
 .schedule h3 {
-  font: 400 1.32rem/1.16 var(--display); letter-spacing: -.012em;
+  font: 500 1.08rem/1.3 var(--sans); letter-spacing: -.015em;
   margin-bottom: .7rem; max-width: 22ch; text-wrap: balance;
 }
 .schedule p { font-size: .93rem; line-height: 1.6; color: var(--ink-soft); }
@@ -628,33 +662,43 @@ a { color: inherit; text-decoration: none; }
   display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
   gap: clamp(2rem, 6vw, 5rem); align-items: start;
 }
+@media (max-width: 940px) { .answers__grid { grid-template-columns: 1fr; } }
+.answers__side { position: sticky; top: 7rem; }
+.answers .h2 { max-width: 14ch; }
 @media (max-width: 940px) {
-  .answers__grid { grid-template-columns: 1fr; }
-  .pledge { grid-column: 1; }
+  .answers__side { position: static; }
+  .qa__index { display: none; }
 }
-.answers .h2 { position: sticky; top: 6rem; max-width: 14ch; }
-@media (max-width: 940px) { .answers .h2 { position: static; } }
+
+.qa__index {
+  margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid var(--rule);
+  display: grid; gap: .55rem; counter-reset: q;
+  font: 400 .74rem/1.5 var(--mono); letter-spacing: .07em; text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.qa__index li { counter-increment: q; display: flex; gap: .8rem; }
+.qa__index li::before { content: counter(q, decimal-leading-zero); color: var(--amber-deep); }
 
 .qa { display: grid; }
 .qa__row { padding: 1.6rem 0; border-top: 1px solid var(--rule-soft); }
 .qa__row:first-child { border-top: 1px solid var(--ink); }
 .qa dt {
-  font: 500 1.06rem/1.35 var(--sans); letter-spacing: -.012em;
-  margin-bottom: .6rem;
+  font: 500 1.16rem/1.32 var(--sans); letter-spacing: -.016em;
+  margin-bottom: .7rem;
 }
 .qa dd { margin: 0; color: var(--ink-soft); font-size: .96rem; line-height: 1.65; max-width: 54ch; }
 
+/* The guarantee is the closer, and it is framed by the same opening —
+   the third and largest use of the shape. */
 .pledge {
-  grid-column: 2;
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  padding: clamp(1.6rem, 3vw, 2.2rem) clamp(1.4rem, 3vw, 2.2rem);
-  border: 1px solid var(--ink);
-  display: grid; gap: .9rem;
-  position: relative;
-}
-.pledge::before {
-  content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 3px;
-  background: var(--amber);
+  margin: clamp(2.5rem, 5vw, 4rem) auto 0;
+  max-width: 44rem;
+  padding: clamp(4rem, 8vw, 6rem) clamp(1.8rem, 4vw, 3.4rem) clamp(2.4rem, 4vw, 3.2rem);
+  background: var(--paper-sunk);
+  -webkit-mask-image: var(--door-tall); mask-image: var(--door-tall);
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  display: grid; gap: 1.1rem; justify-items: center; text-align: center;
 }
 .pledge__lead {
   font: 500 .72rem/1.4 var(--mono); letter-spacing: .13em; text-transform: uppercase;
@@ -662,10 +706,16 @@ a { color: inherit; text-decoration: none; }
 }
 .pledge__body {
   font-family: var(--display); font-weight: 400;
-  font-size: clamp(1.28rem, 1.9vw, 1.6rem); line-height: 1.28;
-  letter-spacing: -.012em; max-width: 36ch; text-wrap: pretty;
+  font-size: clamp(1.7rem, 3.6vw, 2.9rem); line-height: 1.16;
+  letter-spacing: -.018em; max-width: 22ch; text-wrap: balance;
 }
-.pledge__sign { font: 400 .82rem/1.6 var(--mono); letter-spacing: .02em; color: var(--ink-mute); }
+.pledge__sign {
+  font: 400 .82rem/1.7 var(--mono); letter-spacing: .02em; color: var(--ink-mute);
+  max-width: 42ch; text-wrap: balance;
+}
+.pledge__sign span {
+  display: block; margin-top: .5rem; color: var(--ink);
+}
 
 /* ---------- 13. 06 — come in ---------- */
 .start {
@@ -710,7 +760,7 @@ a { color: inherit; text-decoration: none; }
   font-size: .95rem; line-height: 1.55; color: var(--ink-soft);
 }
 .next li span {
-  font: 400 .72rem/1 var(--mono); color: var(--amber);
+  font: 400 .74rem/1 var(--mono); color: var(--amber-deep);
 }
 .next__no {
   margin-top: 1.5rem; padding-top: 1.1rem; border-top: 1px solid var(--rule-soft);
@@ -755,14 +805,54 @@ a { color: inherit; text-decoration: none; }
   font: 400 .82rem/1.5 var(--mono); letter-spacing: .04em;
   color: var(--ink-mute);
 }
-.start__direct a { color: var(--ink); border-bottom: 1px solid var(--rule); padding-bottom: 2px; transition: border-color .3s; }
+.start__direct a { color: var(--ink); border-bottom: 1px solid var(--rule); padding-block: .6rem; transition: border-color .3s; }
 .start__direct a:hover { border-bottom-color: var(--amber); }
 
 /* ---------- 14. Footer ---------- */
 .footer {
   background: var(--interior); color: var(--cream-mute);
-  padding: clamp(3rem, 6vw, 4.5rem) var(--gut) clamp(2rem, 4vw, 3rem);
+  padding: 0 var(--gut) clamp(2rem, 4vw, 3rem);
 }
+
+/* The page ends by walking through, not by trailing off into fine print. */
+.footer__way {
+  position: relative; isolation: isolate;
+  max-width: var(--maxw); margin-inline: auto;
+  padding: clamp(5rem, 12vw, 9rem) 0 clamp(4rem, 9vw, 7rem);
+  display: grid; justify-items: center; gap: 1.2rem; text-align: center;
+}
+.footer__door {
+  position: absolute; z-index: -1; left: 50%; bottom: 0;
+  width: min(440px, 66vw); height: 100%;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(88% 66% at 50% 100%, rgba(232,163,61,.4), rgba(232,163,61,.08) 66%, rgba(232,163,61,0) 100%),
+    linear-gradient(180deg, rgba(240,232,217,.04), rgba(240,232,217,.12));
+  -webkit-mask-image: var(--door-tall); mask-image: var(--door-tall);
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+}
+.footer__door::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(232,163,61,.7) 25%, rgba(232,163,61,.7) 75%, transparent);
+}
+.footer__kicker {
+  font: 500 .72rem/1.4 var(--mono); letter-spacing: .13em; text-transform: uppercase;
+  color: var(--cream-mute);
+}
+.footer__tel {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(2.6rem, 8vw, 5.4rem); line-height: 1;
+  letter-spacing: -.028em; color: var(--cream);
+  transition: color .35s var(--ease);
+}
+.footer__tel:hover { color: var(--amber-lit); }
+.footer__hours { font: 400 .82rem/1.7 var(--mono); letter-spacing: .03em; }
+.footer__hours a {
+  color: var(--cream); border-bottom: 1px solid rgba(240,232,217,.28);
+  display: inline-block; padding-block: .55rem;
+}
+.footer__hours a:hover { border-bottom-color: var(--amber-lit); }
 .footer__row {
   max-width: var(--maxw); margin-inline: auto;
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;
@@ -804,19 +894,22 @@ a { color: inherit; text-decoration: none; }
   .display { font-size: clamp(2.6rem, 12.5vw, 4rem); }
   .hero { padding-top: 3.9rem; min-height: 90svh; }
   .hero__inner { padding-block: 2rem; }
-  .hero__foot { gap: .35rem 1.4rem; font-size: .68rem; padding-block: .95rem; }
+  .hero__foot { gap: .1rem 1.4rem; font-size: .68rem; padding-block: .6rem; }
+  .hero__foot a, .hero__foot span { min-height: 44px; }
+  .start__direct a { min-height: 44px; display: inline-flex; align-items: center; }
   .hero__hint { display: none; }
   .serp { padding-inline: 1rem; }
   .serp__item--you::before { left: -.6rem; }
   .btn { padding: .95rem 1.3rem; font-size: .88rem; }
 
-  /* A ledger needs room for its leaders. At this width it is simply a list. */
-  .ledger__list li { display: block; padding: .8rem 0; }
+  /* A ledger with no room for leaders is still a ledger: two columns,
+     values right-aligned, the dots dropped. */
+  .ledger__list li { align-items: start; padding: .72rem 0; gap: 1rem; }
   .ledger__list .leader { display: none; }
-  .ledger__item { font-size: .97rem; line-height: 1.45; display: block; }
-  .ledger__val { display: block; margin-top: .3rem; font-size: .66rem; }
+  .ledger__item { font-size: .95rem; line-height: 1.45; flex: 1 1 auto; }
+  .ledger__val { font-size: .68rem; text-align: right; max-width: 5.6rem; line-height: 1.4; }
   .ledger__total { padding-top: 1.1rem; margin-top: .8rem; }
-  .ledger__total .leader { min-width: .5rem; margin: 0 .5rem; }
+  .ledger__total .leader { display: block; min-width: .5rem; margin: 0 .6rem; }
 
   .form__foot { gap: .8rem; }
   .form__foot .btn { width: 100%; justify-content: center; }
